@@ -14,10 +14,10 @@ const loginUser =async(req,res)=>{
         }
 
         //otp generation
-        const otp=generate2FACode();
+        //const otp=generate2FACode();
         //console.log(otp);
-        req.session.otp=otp;
-        req.session.user=user.name;
+        //req.session.otp=otp;
+        //req.session.user=user.name;
         req.session.email=user.email;
         req.session.save(err => {
             if (err) {
@@ -25,7 +25,7 @@ const loginUser =async(req,res)=>{
             }
         });
         //console.log(req.session)
-        gmailer(user.email,otp,user.name);
+        //gmailer(user.email,otp,user.name);
 
         return res.status(200).json({"error":0,"username":user.name,"useremail":email});
     }

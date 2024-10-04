@@ -83,8 +83,8 @@ const downloadFile = async (req, res) => {
         }
 
         // Get the path to the file
-        const filePath = path.join(__dirname, '../../uploads', file.uniqueName);
-
+        const filePath = path.join(__dirname, '../uploads', file.uniqueName);
+        console.log(filePath);
         // Check if file exists on server
         if (fs.existsSync(filePath)) {
             // Download the file
