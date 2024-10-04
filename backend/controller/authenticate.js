@@ -1,6 +1,7 @@
-const {User}=require("../models/schema");
+const {User}=require("../model/collection");
+const {gmailer,generate2FACode} = require("../config/mailer")
 
-const loginUser = async(req,res)=>{
+const loginUser =async(req,res)=>{
     try{
         const {email,password}=req.body;
         const user=await User.findOne({email});
@@ -12,8 +13,20 @@ const loginUser = async(req,res)=>{
             return res.status(406).json({"error":1});
         }
 
-        req.session.email=email;
-        
+        //otp generation
+        const otp=generate2FACode();
+        //console.log(otp);
+        req.session.otp=otp;
+        req.session.user=user.name;
+        req.session.email=user.email;
+        req.session.save(err => {
+            if (err) {
+                console.log('Session save error:', err);
+            }
+        });
+        //console.log(req.session)
+        gmailer(user.email,otp,user.name);
+
         return res.status(200).json({"error":0,"username":user.name,"useremail":email});
     }
     catch(err){
@@ -25,7 +38,7 @@ const loginUser = async(req,res)=>{
 const registerUser = async (req, res) => {
     try{
         console.log(req.body);   
-    const {fullname,password,email}=req.body;
+    const {username,password,email}=req.body;
     console.log(req.body);
     const user=await User.findOne({email});
     if (user){
@@ -33,7 +46,7 @@ const registerUser = async (req, res) => {
         return res.status(409).json({"error":1});
     }
     const newUser=new User({
-        name:fullname,
+        name:username,
         password:password,
         email:email,
     });
@@ -46,4 +59,20 @@ const registerUser = async (req, res) => {
     }
 };
 
-module.exports={loginUser,registerUser};
+const verify2fa = async (req,res) => {
+    try{
+        const {otp} = req.body;
+        //console.log(req.session)
+        if (otp==req.session.otp){
+            return res.status(200).json({"error":0})
+        }
+        return res.status(401).json({"error":1});
+    }
+    catch(error){
+        console.log("Error at OTP Verification",error);
+        return res.status(500).json({"error":2});
+    }
+}
+
+
+module.exports={loginUser,registerUser,verify2fa};

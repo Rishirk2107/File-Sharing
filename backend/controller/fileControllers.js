@@ -1,4 +1,4 @@
-const File = require('../models/fileModel');
+const File = require('../model/fileModel');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const fs = require('fs');
@@ -34,6 +34,7 @@ const upload = multer({
 
 // Controller to handle file upload
 const uploadFile = (req, res) => {
+    console.log("File uploading")
     // Check if the user is logged in (i.e., email is present in session)
     if (!req.session.email) {
         return res.status(401).json({ message: 'Unauthorized: No session found' });
