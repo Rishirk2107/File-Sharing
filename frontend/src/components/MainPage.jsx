@@ -8,13 +8,18 @@ import {
   Flex,
   Text,
   useToast,
+  useClipboard,
 } from '@chakra-ui/react';
 import { Container, Row, Col } from 'react-bootstrap';
 
 const MainPage = () => {
   const [files, setFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [shareFile, setShareFile] = useState(null);
   const toast = useToast();
+  const { onCopy, hasCopied } = useClipboard(
+    `http://localhost:3000/files/${shareFile}`
+  );
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -82,7 +87,6 @@ const MainPage = () => {
   };
 
   const downloadFile = async (uniqueName) => {
-    console.log(uniqueName);
     try {
       const response = await fetch(
         `http://localhost:3001/api/files/download/${uniqueName}`,
@@ -118,6 +122,14 @@ const MainPage = () => {
     }
   };
 
+  const handleShare = (uniqueName) => {
+    setShareFile(uniqueName); // Sets the file to be shared
+  };
+
+  const handleVisit = (uniqueName) => {
+    window.open(`http://localhost:3000/files/${uniqueName}`, '_blank'); // Opens in a new tab
+  };
+
   return (
     <Box p={8} bg="gray.50" minH="100vh">
       <Heading as="h1" size="xl" mb={8} textAlign="center">
@@ -141,6 +153,7 @@ const MainPage = () => {
                   <Text fontSize="lg" fontWeight="bold">
                     {file.originalName} {/* Displays the original name */}
                   </Text>
+
                   <Button
                     mt={4}
                     colorScheme="teal"
@@ -148,6 +161,37 @@ const MainPage = () => {
                   >
                     Download
                   </Button>
+
+                  {/* Share Button */}
+                  <Button
+                    mt={2}
+                    colorScheme="blue"
+                    onClick={() => handleShare(file.uniqueName)}
+                  >
+                    Share
+                  </Button>
+
+                  {/* Display the shareable link */}
+                  {shareFile === file.uniqueName && (
+                    <Box mt={2} p={2} border="1px" borderRadius="md" borderColor="gray.300" bg="gray.100">
+                      <Text fontSize="sm">
+                        http://localhost:3000/files/{file.uniqueName} {/* Share URL */}
+                      </Text>
+
+                      <Stack direction="row" spacing={2} mt={2}>
+                        <Button size="sm" onClick={onCopy}>
+                          {hasCopied ? 'Copied!' : 'Copy'}
+                        </Button>
+                        <Button
+                          size="sm"
+                          colorScheme="green"
+                          onClick={() => handleVisit(file.uniqueName)}
+                        >
+                          Visit
+                        </Button>
+                      </Stack>
+                    </Box>
+                  )}
                 </Flex>
               </Col>
             ))
