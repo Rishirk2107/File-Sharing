@@ -18,13 +18,13 @@ const MainPage = () => {
   const [shareFile, setShareFile] = useState(null);
   const toast = useToast();
   const { onCopy, hasCopied } = useClipboard(
-    `http://localhost:3000/files/${shareFile}`
+    `${process.env.PATH_URL}/files/${shareFile}`
   );
 
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/files/list', {
+        const response = await fetch(`${process.env.PATH_URL}/api/files/list`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const MainPage = () => {
     formData.append('file', selectedFile);
 
     try {
-      const response = await fetch('http://localhost:3001/api/files/upload', {
+      const response = await fetch(`${process.env.PATH_URL}/api/files/upload`, {
         method: 'POST',
         body: formData,
         credentials: 'include',
@@ -89,7 +89,7 @@ const MainPage = () => {
   const downloadFile = async (uniqueName) => {
     try {
       const response = await fetch(
-        `http://localhost:3001/api/files/download/${uniqueName}`,
+        `${process.env.PATH_URL}/api/files/download/${uniqueName}`,
         {
           method: 'GET',
           credentials: 'include',
@@ -127,7 +127,7 @@ const MainPage = () => {
   };
 
   const handleVisit = (uniqueName) => {
-    window.open(`http://localhost:3000/files/${uniqueName}`, '_blank'); // Opens in a new tab
+    window.open(`${process.env.PATH_URL}/files/${uniqueName}`, '_blank'); // Opens in a new tab
   };
 
   return (
@@ -175,7 +175,7 @@ const MainPage = () => {
                   {shareFile === file.uniqueName && (
                     <Box mt={2} p={2} border="1px" borderRadius="md" borderColor="gray.300" bg="gray.100">
                       <Text fontSize="sm">
-                        http://localhost:3000/files/{file.uniqueName} {/* Share URL */}
+                      ${process.env.PATH_URL}/files/{file.uniqueName} {/* Share URL */}
                       </Text>
 
                       <Stack direction="row" spacing={2} mt={2}>

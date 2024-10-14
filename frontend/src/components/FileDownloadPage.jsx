@@ -17,7 +17,7 @@ const FileDownloadPage = () => {
   const downloadFile = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3001/api/files/download/${uniqueName}`,
+        `${process.env.PORT_URL}/files/download/${uniqueName}`,
         {
           method: 'GET',
           credentials: 'include',
