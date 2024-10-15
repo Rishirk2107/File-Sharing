@@ -12,6 +12,7 @@ const loginUser =async(req,res)=>{
         if (!isMatch){
             return res.status(406).json({"error":1});
         }
+        console.log(user);
 
         //otp generation
         //const otp=generate2FACode();

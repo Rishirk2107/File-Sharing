@@ -76,7 +76,7 @@ const downloadFile = async (req, res) => {
         const fileId = req.params.id;
 
         // Find the file by its unique name and ensure it belongs to the logged-in user
-        const file = await File.findOne({ uniqueName: fileId, email: req.session.email });
+        const file = await File.findOne({$or:[{ uniqueName: fileId, email: req.session.email },{uniqueName:fileId, isShareable:true}]});
 
         if (!file) {
             return res.status(404).json({ message: 'File not found or unauthorized access' });
@@ -97,4 +97,20 @@ const downloadFile = async (req, res) => {
     }
 };
 
-module.exports = { uploadFile, downloadFile };
+const shareFile=async(req,res)=>{
+    try {
+        const fileId = req.params.id;
+        console.log("Sharing file",fileId)
+        const file = await File.findOne({ uniqueName: fileId });
+        if (!file) {
+            return res.status(404).json({ message: 'File not found' });
+        }
+        file.isShareable = true;
+        await file.save();
+        res.status(200).json({ message: 'File shareability updated successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to update file shareability', error });
+    }
+}
+
+module.exports = { uploadFile, downloadFile,shareFile };

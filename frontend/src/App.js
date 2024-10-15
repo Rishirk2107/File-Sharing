@@ -8,8 +8,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginSignup />} />
-        <Route path="/main" element={<MainPage />} />
+        <Route path="/login" element={<LoginSignup />} />
+        <Route path="/" element={<MainPage />} />
         <Route path="/files/:uniqueName" element={<FileDownloadPage />} />
       </Routes>
     </Router>

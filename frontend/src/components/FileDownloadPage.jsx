@@ -17,7 +17,7 @@ const FileDownloadPage = () => {
   const downloadFile = async () => {
     try {
       const response = await fetch(
-        `${process.env.PORT_URL}/files/download/${uniqueName}`,
+        `${process.env.REACT_APP_PORT_URL}/api/files/download/${uniqueName}`,
         {
           method: 'GET',
           credentials: 'include',

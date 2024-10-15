@@ -14,14 +14,14 @@ const LoginSignup = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch( `${process.env.PATH_URL}/auth/login`, {
+      const res = await fetch( `${process.env.REACT_APP_PORT_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include', // Important for cookies/sessions
         body: JSON.stringify({ email, password })
       });
       if (res.ok) {
-        navigate('/main'); // Redirect to /main after successful login
+        navigate('/'); // Redirect to /main after successful login
       } else {
         alert('Login failed!');
       }
@@ -32,8 +32,9 @@ const LoginSignup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    console.log(process.env.REACT_APP_PORT_URL);
     try {
-      const res = await fetch(`${process.env.PATH_URL}/auth/signup`, {
+      const res = await fetch(`${process.env.REACT_APP_PORT_URL}/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include', // Important for cookies/sessions

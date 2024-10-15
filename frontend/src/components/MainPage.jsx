@@ -11,6 +11,7 @@ import {
   useClipboard,
 } from '@chakra-ui/react';
 import { Container, Row, Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
   const [files, setFiles] = useState([]);
@@ -18,13 +19,15 @@ const MainPage = () => {
   const [shareFile, setShareFile] = useState(null);
   const toast = useToast();
   const { onCopy, hasCopied } = useClipboard(
-    `${process.env.PATH_URL}/files/${shareFile}`
+    `${window.location.href}files/${shareFile}`
   );
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const response = await fetch(`${process.env.PATH_URL}/api/files/list`, {
+        const response = await fetch(`${process.env.REACT_APP_PORT_URL}/api/files/list`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -58,7 +61,7 @@ const MainPage = () => {
     formData.append('file', selectedFile);
 
     try {
-      const response = await fetch(`${process.env.PATH_URL}/api/files/upload`, {
+      const response = await fetch(`${process.env.REACT_APP_PORT_URL}/api/files/upload`, {
         method: 'POST',
         body: formData,
         credentials: 'include',
@@ -89,7 +92,7 @@ const MainPage = () => {
   const downloadFile = async (uniqueName) => {
     try {
       const response = await fetch(
-        `${process.env.PATH_URL}/api/files/download/${uniqueName}`,
+        `${process.env.REACT_APP_PORT_URL}/api/files/download/${uniqueName}`,
         {
           method: 'GET',
           credentials: 'include',
@@ -123,11 +126,18 @@ const MainPage = () => {
   };
 
   const handleShare = (uniqueName) => {
+    fetch(`${process.env.REACT_APP_PORT_URL}/api/files/share/${uniqueName}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
     setShareFile(uniqueName); // Sets the file to be shared
   };
 
   const handleVisit = (uniqueName) => {
-    window.open(`${process.env.PATH_URL}/files/${uniqueName}`, '_blank'); // Opens in a new tab
+    window.open(`${window.location.href}files/${uniqueName}`, '_blank'); // Opens in a new tab
   };
 
   return (
@@ -175,7 +185,7 @@ const MainPage = () => {
                   {shareFile === file.uniqueName && (
                     <Box mt={2} p={2} border="1px" borderRadius="md" borderColor="gray.300" bg="gray.100">
                       <Text fontSize="sm">
-                      ${process.env.PATH_URL}/files/{file.uniqueName} {/* Share URL */}
+                      {window.location.href}/files/{file.uniqueName} {/* Share URL */}
                       </Text>
 
                       <Stack direction="row" spacing={2} mt={2}>

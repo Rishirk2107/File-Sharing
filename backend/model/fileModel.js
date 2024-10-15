@@ -17,6 +17,10 @@ const fileSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    isShareable:{
+        type:Boolean,
+        default:false
+    },
     size:{
         type:Number,
         required:true
