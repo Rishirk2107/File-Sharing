@@ -21,6 +21,8 @@ const LoginSignup = () => {
         body: JSON.stringify({ email, password })
       });
       if (res.ok) {
+        const data=await res.json();
+        localStorage.setItem("token",data.token);
         navigate('/'); // Redirect to /main after successful login
       } else {
         alert('Login failed!');

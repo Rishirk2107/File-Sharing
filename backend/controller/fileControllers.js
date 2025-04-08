@@ -35,9 +35,9 @@ const upload = multer({
 // Controller to handle file upload
 const uploadFile = (req, res) => {
     console.log("File uploading")
-    // Check if the user is logged in (i.e., email is present in session)
-    if (!req.session.email) {
-        return res.status(401).json({ message: 'Unauthorized: No session found' });
+    // Check if the user is logged in (i.e., userId is present in jwt)
+    if (!req.user) {
+        return res.status(401).json({ message: 'Unauthorized: No user found' });
     }
 
     upload(req, res, async (err) => {
@@ -49,7 +49,7 @@ const uploadFile = (req, res) => {
             const fileData = new File({
                 originalName: req.file.originalname,
                 uniqueName: req.file.filename,
-                email: req.session.email, // Store the email from session
+                userId: req.user, // Store the userId from jwt token
                 size:req.file.size
             });
 
@@ -67,16 +67,16 @@ const uploadFile = (req, res) => {
 
 // Controller to handle file download
 const downloadFile = async (req, res) => {
-    // Check if the user is logged in (i.e., email is present in session)
-    if (!req.session.email) {
-        return res.status(401).json({ message: 'Unauthorized: No session found' });
+    // Check if the user is logged in (i.e., userId is present in the jwt token)
+    if (!req.user) {
+        return res.status(401).json({ message: 'Unauthorized: No user found' });
     }
 
     try {
         const fileId = req.params.id;
 
         // Find the file by its unique name and ensure it belongs to the logged-in user
-        const file = await File.findOne({$or:[{ uniqueName: fileId, email: req.session.email },{uniqueName:fileId, isShareable:true}]});
+        const file = await File.findOne({$or:[{ uniqueName: fileId, userId: req.user },{uniqueName:fileId, isShareable:true}]});
 
         if (!file) {
             return res.status(404).json({ message: 'File not found or unauthorized access' });

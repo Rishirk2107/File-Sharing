@@ -13,7 +13,7 @@ const fileSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    email:{
+    userId:{
         type:String,
         required:true
     },

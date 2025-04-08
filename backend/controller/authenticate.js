@@ -1,4 +1,5 @@
 const {User}=require("../model/collection");
+const jwt = require('jsonwebtoken');
 const {gmailer,generate2FACode} = require("../config/mailer")
 
 const loginUser =async(req,res)=>{
@@ -12,24 +13,12 @@ const loginUser =async(req,res)=>{
         if (!isMatch){
             return res.status(406).json({"error":1});
         }
-        console.log(user);
 
-        //otp generation
-        //const otp=generate2FACode();
-        //console.log(otp);
-        //req.session.otp=otp;
-        //req.session.user=user.name;
-        req.session.email=user.email;
-        req.session.save(err => {
-            if (err) {
-                console.log('Session save error:', err);
-            }
-        });
-        //console.log(req.session)
-        //gmailer(user.email,otp,user.name);
+        const token=jwt.sign({userId:user.userId},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRES_IN});
+        
+        res.json({"token":token});
 
-        return res.status(200).json({"error":0,"username":user.name,"useremail":email});
-    }
+        }
     catch(err){
         console.log("Error at logging in:",error);
         return res.status(400).json({"error":3});

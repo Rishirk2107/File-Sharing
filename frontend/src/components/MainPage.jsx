@@ -22,6 +22,8 @@ const MainPage = () => {
     `${window.location.href}files/${shareFile}`
   );
 
+  const token = localStorage.getItem('token');
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +33,7 @@ const MainPage = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
           credentials: 'include',
           body: JSON.stringify({ preference: { type: 'size', value: 1 } }),
@@ -64,7 +67,10 @@ const MainPage = () => {
       const response = await fetch(`${process.env.REACT_APP_PORT_URL}/api/files/upload`, {
         method: 'POST',
         body: formData,
-        credentials: 'include',
+        headers:{
+          "Authorization": `Bearer ${token}`,
+        }
+        
       });
 
       if (!response.ok) {
@@ -98,6 +104,7 @@ const MainPage = () => {
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           }
         }
       );
