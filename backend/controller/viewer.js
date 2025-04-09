@@ -4,7 +4,6 @@ const data = async (req, res) => {
     try {
         const {preference} = req.body;
         const userId=req.user;
-
         
         if (!userId) {
             return res.status(400).json({ "error": 2, "message": "userId not found in session" });
