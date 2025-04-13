@@ -1,0 +1,35 @@
+service: file-sharing-app
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-south-1
+  environment:
+    MONGO_URI: mongodb+srv://rishi:rishik2184@cluster.dwaxkxx.mongodb.net/File-Sharing?retryWrites=true&w=majority
+    S3_BUCKET_NAME: 
+  deploymentBucket:
+    name: file-sharing-rk-1
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+            - s3:DeleteObject
+          Resource: arn:aws:s3:::file-sharing-rk-1/*
+          
+functions:
+  app:
+    handler: lambda.handler
+    timeout: 30
+    memorySize: 1024
+    events:
+      - httpApi: "*"
+
+package:
+  exclude:
+    - node_modules/**
+    - uploads/**
+    - .git/**

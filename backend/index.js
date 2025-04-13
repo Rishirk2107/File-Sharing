@@ -26,9 +26,4 @@ app.get("/protected",authenticate,(req,res)=>{
     res.json({ message: 'You accessed a protected route', user: req.user });
 })
 
-connectDB().then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  });
-  
+module.exports=app;
