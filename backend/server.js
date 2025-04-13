@@ -1,32 +1,30 @@
-const express=require("express");
-const bodyParser=require("body-parser");
-const cors=require("cors");
-require("dotenv").config()
+const http = require('http');
+const httpProxy = require('http-proxy');
+const startServer = require('./app'); // Assuming server.js is in the same directory
 
-const authRoutes=require("./routes/authRoutes");
-const issueRoute=require("./routes/issueRoute");
-const fileRoute=require("./routes/fileRoutes");
-const {authenticate} =require("./middleware/authMiddleware");
+const numberOfServers = 4; // You can change this to any number
+const basePort = 3001;
 
-const PORT=process.env.PORT;
+const servers = [];
 
-const app=express();
+for (let i = 0; i < numberOfServers; i++) {
+    const port = basePort + i;
+    servers.push({ host: 'localhost', port });
+    startServer(port); // Launch each Express server
+}
 
-app.use(cors({
-    origin: 'http://localhost:3000', // React app origin
-    credentials: true // Allow cookies and sessions to be included
-}));
+let current = 0;
+const proxy = httpProxy.createProxyServer();
 
-app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+const server = http.createServer((req, res) => {
+    const target = servers[current];
+    console.log(`🔁 Forwarding request to: http://${target.host}:${target.port}`);
 
-app.use("/auth",authRoutes);
-app.use("/issue",issueRoute);
-app.use("/api/files",fileRoute)
-app.get("/protected",authenticate,(req,res)=>{
-    res.json({ message: 'You accessed a protected route', user: req.user });
-})
+    proxy.web(req, res, { target: `http://${target.host}:${target.port}` });
 
-app.listen(PORT,()=>{
-    console.log(`server is running on port ${PORT}`);
+    current = (current + 1) % servers.length;
+});
+
+server.listen(5000, () => {
+    console.log('🚦 Load balancer listening on http://localhost:5000');
 });

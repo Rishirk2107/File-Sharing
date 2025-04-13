@@ -30,6 +30,7 @@ const data = async (req, res) => {
         if (files.length === 0) {
             return res.status(404).json({ "message": "No files found" });
         }
+        console.log(files);
         res.status(200).json(files);
 
     } catch (error) {

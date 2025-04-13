@@ -5,6 +5,7 @@ const {gmailer,generate2FACode} = require("../config/mailer")
 const loginUser =async(req,res)=>{
     try{
         const {email,password}=req.body;
+        console.log(email,password);
         const user=await User.findOne({email});
         if (!user){
             return res.status(400).json({"error":2});
@@ -20,7 +21,7 @@ const loginUser =async(req,res)=>{
 
         }
     catch(err){
-        console.log("Error at logging in:",error);
+        console.log("Error at logging in:",err);
         return res.status(400).json({"error":3});
     }
 }
