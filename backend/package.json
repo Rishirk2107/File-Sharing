@@ -1,12 +1,11 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "echo build",
-    "dev": "node app.js",
-    "start": "node app.js",
+    "dev": "node server.js",
+    "start": "node server.js",
     "vercel-build": "echo vercel build"
   },
   "keywords": [],
@@ -14,12 +13,14 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "axios": "^1.8.4",
     "body-parser": "^1.20.2",
     "connect-mongo": "^5.1.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
     "express": "^4.20.0",
+    "express-rate-limit": "^7.5.0",
     "express-session": "^1.18.0",
     "http-proxy": "^1.18.1",
     "jsonwebtoken": "^9.0.2",
