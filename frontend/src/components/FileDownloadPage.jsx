@@ -3,14 +3,11 @@ import { useParams } from 'react-router-dom';
 import { Box, Heading, Button, Flex, Text, useToast } from '@chakra-ui/react';
 
 const FileDownloadPage = () => {
-  const { uniqueName } = useParams(); // Get the file's unique name from the URL
-  const [fileInfo, setFileInfo] = useState(null); // State to hold file information (if needed)
+  const { uniqueName } = useParams();
+  const [fileInfo, setFileInfo] = useState(null);
   const toast = useToast();
 
   useEffect(() => {
-    // Optionally, fetch file details from the backend using the uniqueName if needed
-    // You can update this section to fetch more file info like original name, size, etc.
-    // For now, we're only displaying the uniqueName from the URL
     setFileInfo({ originalName: uniqueName });
   }, [uniqueName]);
 
@@ -54,7 +51,7 @@ const FileDownloadPage = () => {
     <Flex align="center" justify="center" minH="100vh" bg="gray.50">
       <Box p={8} bg="white" shadow="lg" borderRadius="md">
         <Heading as="h2" size="lg" mb={4} textAlign="center">
-          {fileInfo?.originalName || 'File'} {/* Display the file name */}
+          {fileInfo?.originalName || 'File'} 
         </Heading>
         <Text textAlign="center" mb={6}>
           Click the button below to download the file.
