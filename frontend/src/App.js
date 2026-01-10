@@ -18,7 +18,7 @@ function App() {
           </ProtectedRoute>
         } />
 
-        <Route path="/files/:uniqueName" element={
+        <Route path="/files/*" element={
           <ProtectedRoute>
             <FileDownloadPage />
           </ProtectedRoute>

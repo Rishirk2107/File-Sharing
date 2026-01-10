@@ -95,36 +95,15 @@ const MainPage = () => {
     }
   };
 
-  const downloadFile = async (uniqueName) => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_PORT_URL}/api/files/download/${uniqueName}`,
-        {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Error downloading file');
-      }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', uniqueName); // Uses uniqueName for downloading
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode.removeChild(link);
-    } catch (error) {
-      console.error('Error downloading file:', error);
+  const downloadFile = (uniqueName) => {
+    // Find the file object by uniqueName
+    const file = files.find(f => f.uniqueName === uniqueName);
+    if (file && file.url) {
+      // Open the Cloudinary URL directly
+      window.open(file.url, '_blank');
+    } else {
       toast({
-        title: 'Error downloading file',
+        title: 'File URL not found',
         status: 'error',
         duration: 2000,
         isClosable: true,
@@ -171,6 +150,7 @@ const MainPage = () => {
                     {file.originalName} {/* Displays the original name */}
                   </Text>
 
+
                   <Button
                     mt={4}
                     colorScheme="teal"
@@ -178,6 +158,15 @@ const MainPage = () => {
                   >
                     Download
                   </Button>
+
+                  {/* Show Cloudinary URL if available */}
+                  {file.url && (
+                    <Box mt={2} p={2} border="1px" borderRadius="md" borderColor="gray.300" bg="gray.100">
+                      <Text fontSize="sm" wordBreak="break-all">
+                        Cloudinary URL: <a href={file.url} target="_blank" rel="noopener noreferrer">{file.url}</a>
+                      </Text>
+                    </Box>
+                  )}
 
                   {/* Share Button */}
                   <Button

@@ -18,13 +18,13 @@ const data = async (req, res) => {
 
         let files;
         if (type == "originalName") {
-            files = await File.find({ "userId": userId }, { _id: 0, uniqueName: 1 ,originalName : 1}).sort({ "originalName": value });
+            files = await File.find({ "userId": userId }, { _id: 0, uniqueName: 1 ,originalName : 1, url: 1 }).sort({ "originalName": value });
         } else if (type == 'uploadDate') {
-            files = await File.find({ "userId": userId }, { _id: 0, uniqueName: 1 ,originalName : 1}).sort({ "uploadDate": value });
+            files = await File.find({ "userId": userId }, { _id: 0, uniqueName: 1 ,originalName : 1, url: 1 }).sort({ "uploadDate": value });
         } else if (type == 'size') {
-            files = await File.find({ "userId": userId }, { _id: 0, uniqueName: 1, originalName : 1}).sort({ 'size': value });
+            files = await File.find({ "userId": userId }, { _id: 0, uniqueName: 1, originalName : 1, url: 1 }).sort({ 'size': value });
         } else {
-            files = await File.find({ "userId": userId }, { _id: 0, uniqueName: 1 ,originalName : 1});
+            files = await File.find({ "userId": userId }, { _id: 0, uniqueName: 1 ,originalName : 1, url: 1 });
         }
 
         if (files.length === 0) {
