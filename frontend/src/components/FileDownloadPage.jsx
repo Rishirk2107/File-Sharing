@@ -56,34 +56,46 @@ const FileDownloadPage = () => {
   };
 
   return (
-    <Flex align="center" justify="center" minH="100vh" bg="gray.50">
-      <Box p={8} bg="white" shadow="lg" borderRadius="md">
-        {loading ? (
-          <Flex justify="center" align="center" minH="200px"><Spinner size="xl" /></Flex>
-        ) : fileInfo ? (
-          <>
-            <Heading as="h2" size="lg" mb={4} textAlign="center">
-              {fileInfo.originalName || 'File'}
-            </Heading>
-            <Text textAlign="center" mb={6}>
-              Click the button below to view or download the file from Cloudinary.
-            </Text>
-            <Flex justify="center">
-              <Button colorScheme="blue" onClick={visitFile}>
-                Open File
-              </Button>
-            </Flex>
-            {fileInfo.url && (
-              <Text mt={4} fontSize="sm" wordBreak="break-all" textAlign="center">
-                <a href={fileInfo.url} target="_blank" rel="noopener noreferrer">{fileInfo.url}</a>
-              </Text>
-            )}
-          </>
-        ) : (
-          <Text textAlign="center">File not found or you do not have access.</Text>
-        )}
+    <Box minH="100vh" bgGradient="linear(to-br, blue.50, blue.100)">
+      {/* Header Bar */}
+      <Box bg="blue.600" py={4} px={8} boxShadow="md">
+        <Heading as="h1" size="lg" color="white" textAlign="left" letterSpacing="wide">
+          <span role="img" aria-label="file">📁</span> File Download
+        </Heading>
       </Box>
-    </Flex>
+      <Flex align="center" justify="center" minH="80vh">
+        <Box p={8} bg="white" shadow="2xl" borderRadius="xl" minW="350px" maxW="500px" w="100%">
+          {loading ? (
+            <Flex justify="center" align="center" minH="200px">
+              <Spinner size="xl" color="blue.500" thickness="4px" speed="0.8s" />
+            </Flex>
+          ) : fileInfo ? (
+            <>
+              <Heading as="h2" size="lg" mb={4} textAlign="center" color="blue.700" fontWeight="bold">
+                {fileInfo.originalName || 'File'}
+              </Heading>
+              <Text textAlign="center" mb={6} color="gray.700">
+                Click below to view or download your file from Cloudinary.
+              </Text>
+              <Flex justify="center" mb={4}>
+                <Button colorScheme="blue" size="lg" borderRadius="md" boxShadow="md" onClick={visitFile}>
+                  Open File
+                </Button>
+              </Flex>
+              {fileInfo.url && (
+                <Box mt={4} p={2} border="1px" borderRadius="md" borderColor="blue.200" bg="blue.50">
+                  <Text fontSize="sm" wordBreak="break-all" textAlign="center" color="blue.700">
+                    <b>Cloudinary URL:</b> <a href={fileInfo.url} target="_blank" rel="noopener noreferrer">{fileInfo.url}</a>
+                  </Text>
+                </Box>
+              )}
+            </>
+          ) : (
+            <Text textAlign="center" color="red.500" fontWeight="bold">File not found or you do not have access.</Text>
+          )}
+        </Box>
+      </Flex>
+    </Box>
   );
 };
 

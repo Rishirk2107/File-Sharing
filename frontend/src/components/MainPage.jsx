@@ -127,65 +127,65 @@ const MainPage = () => {
   };
 
   return (
-    <Box p={8} bg="gray.50" minH="100vh">
-      <Heading as="h1" size="xl" mb={8} textAlign="center">
-        File Sharing App
-      </Heading>
+    <Box minH="100vh" bgGradient="linear(to-br, blue.50, blue.100)">
+      {/* Header Bar */}
+      <Box bg="blue.600" py={4} px={8} boxShadow="md">
+        <Heading as="h1" size="lg" color="white" textAlign="left" letterSpacing="wide">
+          <span role="img" aria-label="file">📁</span> File Sharing App
+        </Heading>
+      </Box>
 
       <Container>
-        <Row className="justify-content-center">
+        <Row className="justify-content-center mt-5">
           {files.length > 0 ? (
             files.map((file, index) => (
               <Col key={index} md={4} className="mb-4">
                 <Flex
-                  p={4}
+                  p={5}
                   bg="white"
-                  shadow="md"
-                  borderRadius="md"
+                  shadow="lg"
+                  borderRadius="xl"
                   direction="column"
                   align="center"
                   justify="center"
+                  transition="box-shadow 0.2s"
+                  _hover={{ boxShadow: '2xl', transform: 'scale(1.03)' }}
                 >
-                  <Text fontSize="lg" fontWeight="bold">
-                    {file.originalName} {/* Displays the original name */}
+                  <Text fontSize="xl" fontWeight="bold" color="blue.700" mb={2}>
+                    {file.originalName}
                   </Text>
-
-
                   <Button
-                    mt={4}
+                    mt={2}
                     colorScheme="teal"
-                    onClick={() => downloadFile(file.uniqueName)} // Uses uniqueName for download
+                    onClick={() => downloadFile(file.uniqueName)}
+                    borderRadius="md"
+                    boxShadow="md"
                   >
                     Download
                   </Button>
-
-                  {/* Show Cloudinary URL if available */}
                   {file.url && (
-                    <Box mt={2} p={2} border="1px" borderRadius="md" borderColor="gray.300" bg="gray.100">
-                      <Text fontSize="sm" wordBreak="break-all">
-                        Cloudinary URL: <a href={file.url} target="_blank" rel="noopener noreferrer">{file.url}</a>
+                    <Box mt={2} p={2} border="1px" borderRadius="md" borderColor="gray.300" bg="gray.50">
+                      <Text fontSize="sm" wordBreak="break-all" color="gray.700">
+                        <b>Cloudinary URL:</b> <a href={file.url} target="_blank" rel="noopener noreferrer">{file.url}</a>
                       </Text>
                     </Box>
                   )}
-
-                  {/* Share Button */}
                   <Button
                     mt={2}
                     colorScheme="blue"
                     onClick={() => handleShare(file.uniqueName)}
+                    borderRadius="md"
+                    boxShadow="md"
                   >
                     Share
                   </Button>
-
-                  {/* Display the shareable link */}
                   {shareFile === file.uniqueName && (
-                    <Box mt={2} p={2} border="1px" borderRadius="md" borderColor="gray.300" bg="gray.100">
-                      <Text fontSize="sm">
-                      {window.location.href}/files/{file.uniqueName} {/* Share URL */}
+                    <Box mt={2} p={2} border="1px" borderRadius="md" borderColor="blue.200" bg="blue.50">
+                      <Text fontSize="sm" color="blue.700">
+                        <b>Share URL:</b> {window.location.href}/files/{file.uniqueName}
                       </Text>
-
                       <Stack direction="row" spacing={2} mt={2}>
-                        <Button size="sm" onClick={onCopy}>
+                        <Button size="sm" colorScheme="blue" variant="outline" onClick={onCopy}>
                           {hasCopied ? 'Copied!' : 'Copy'}
                         </Button>
                         <Button
@@ -202,20 +202,23 @@ const MainPage = () => {
               </Col>
             ))
           ) : (
-            <Text>No files available.</Text>
+            <Text fontSize="lg" color="gray.600" mt={8} textAlign="center">No files available.</Text>
           )}
         </Row>
       </Container>
 
-      <Box position="fixed" bottom="20px" right="20px">
-        <Stack direction="row" spacing={4}>
+      {/* Upload Floating Bar */}
+      <Box position="fixed" bottom="30px" right="30px" zIndex={10}>
+        <Stack direction="row" spacing={4} align="center" bg="white" p={3} borderRadius="xl" boxShadow="lg">
           <Input
             type="file"
             onChange={handleFileChange}
             variant="outline"
             size="md"
+            borderColor="blue.300"
+            _hover={{ borderColor: 'blue.500' }}
           />
-          <Button colorScheme="blue" onClick={handleFileUpload}>
+          <Button colorScheme="blue" onClick={handleFileUpload} borderRadius="md" boxShadow="md">
             Upload File
           </Button>
         </Stack>
